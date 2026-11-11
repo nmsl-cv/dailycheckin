@@ -2,7 +2,6 @@ name: Daily Checkin
 
 on:
   schedule:
-    # 每天北京时间 09:00 自动运行 (UTC 01:00)
     - cron: '0 1 * * *'
   workflow_dispatch:
 
@@ -26,6 +25,17 @@ jobs:
         env:
           CHECKIN_CONFIG: ${{ secrets.CHECKIN_CONFIG }}
         run: |
-          python3 -c "import os; open('config.json', 'w', encoding='utf-8').write(os.environ.get('CHECKIN_CONFIG', ''))"
-          echo "=== 配置文件已成功写入 ==="
+          python3 -c "
+          import os, json
+          cfg_str = os.environ.get('CHECKIN_CONFIG', '')
+          print('--- 原始配置长度 ---:', len(cfg_str))
+          try:
+              data = json.loads(cfg_str)
+              print('--- 成功解析到的配置项 ---:', list(data.keys()))
+              with open('config.json', 'w', encoding='utf-8') as f:
+                  json.dump(data, f, ensure_ascii=False, indent=2)
+          except Exception as e:
+              print('--- JSON解析失败 ---:', e)
+          "
+          echo "=== 正在执行 dailycheckin ==="
           dailycheckin
