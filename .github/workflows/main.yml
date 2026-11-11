@@ -27,15 +27,9 @@ jobs:
         run: |
           python3 -c "
           import os, json
-          cfg_str = os.environ.get('CHECKIN_CONFIG', '')
-          print('--- 原始配置长度 ---:', len(cfg_str))
-          try:
-              data = json.loads(cfg_str)
-              print('--- 成功解析到的配置项 ---:', list(data.keys()))
-              with open('config.json', 'w', encoding='utf-8') as f:
-                  json.dump(data, f, ensure_ascii=False, indent=2)
-          except Exception as e:
-              print('--- JSON解析失败 ---:', e)
+          cfg = json.loads(os.environ['CHECKIN_CONFIG'])
+          with open('config.json', 'w', encoding='utf-8') as f:
+              json.dump(cfg, f, ensure_ascii=False, indent=2)
           "
-          echo "=== 正在执行 dailycheckin ==="
+          echo "=== 开始签到 ==="
           dailycheckin
