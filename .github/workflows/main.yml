@@ -32,5 +32,18 @@ jobs:
           with open('config/config.json', 'w', encoding='utf-8') as f:
               json.dump(cfg, f, ensure_ascii=False, indent=2)
           "
-          echo "=== 配置文件生成完毕，开始签到 ==="
+          echo "=== 检查 dailycheckin 支持的所有平台名称 ==="
+          python3 -c "
+          import dailycheckin
+          import pkgutil, inspect
+          print('库路径:', dailycheckin.__file__)
+          # 列出所有可用的签到模块
+          import importlib
+          for finder, name, ispkg in pkgutil.walk_packages(dailycheckin.__path__):
+              if 'music' in name.lower() or '163' in name.lower() or 'netease' in name.lower():
+                  print('找到网易云相关模块:', name)
+          "
+          echo "=== 打印当前配置文件内容 ==="
+          cat config/config.json
+          echo "=== 尝试执行 ==="
           dailycheckin
