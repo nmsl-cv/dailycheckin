@@ -21,24 +21,16 @@ jobs:
         run: |
           pip install --upgrade dailycheckin
 
-      - name: 生成配置文件并运行签到
+      - name: 自动生成文件并签到
         env:
           CHECKIN_CONFIG: ${{ secrets.CHECKIN_CONFIG }}
         run: |
+          mkdir -p config
           python3 -c "
-          import os, json, shutil
+          import os, json
           cfg = json.loads(os.environ['CHECKIN_CONFIG'])
-          # 同时在根目录和子目录写入，确保无论哪层都能读到
-          for p in ['config.json', 'dailycheckin/config.json']:
-              try:
-                  os.makedirs(os.path.dirname(p), exist_ok=True)
-                  with open(p, 'w', encoding='utf-8') as f:
-                      json.dump(cfg, f, ensure_ascii=False, indent=2)
-                  print(f'成功写入配置文件至: {p}')
-              except Exception as e:
-                  pass
+          with open('config/config.json', 'w', encoding='utf-8') as f:
+              json.dump(cfg, f, ensure_ascii=False, indent=2)
           "
-          echo "=== 检查支持的命令参数 ==="
-          dailycheckin --help || true
-          echo -e "\n=== 开始执行签到 ==="
-          dailycheckin --include NETEASE_CLOUD_MUSIC || dailycheckin
+          echo "=== 配置文件生成完毕，开始签到 ==="
+          dailycheckin
