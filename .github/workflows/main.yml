@@ -2,9 +2,8 @@ name: Daily Checkin
 
 on:
   schedule:
-    # 每天北京时间早上 9:00 自动运行 (对应 UTC 01:00)
+    # 每天北京时间早上 9:00 自动运行 (UTC 01:00)
     - cron: '0 1 * * *'
-  # 支持在网页上手动点击按钮触发
   workflow_dispatch:
 
 jobs:
@@ -23,8 +22,9 @@ jobs:
         run: |
           pip install --upgrade dailycheckin
 
-      - name: 运行每日签到
+      - name: 生成配置文件并运行签到
         env:
           CHECKIN_CONFIG: ${{ secrets.CHECKIN_CONFIG }}
         run: |
+          echo "$CHECKIN_CONFIG" > config.json
           dailycheckin
