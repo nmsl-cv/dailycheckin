@@ -2,9 +2,8 @@ name: Daily Checkin
 
 on:
   schedule:
-    # 每天北京时间上午 09:00 自动运行 (对应 UTC 01:00)
+    # 每天北京时间 09:00 自动运行 (UTC 01:00)
     - cron: '0 1 * * *'
-  # 支持在 GitHub 网页手动点击触发
   workflow_dispatch:
 
 jobs:
@@ -27,10 +26,6 @@ jobs:
         env:
           CHECKIN_CONFIG: ${{ secrets.CHECKIN_CONFIG }}
         run: |
-          cat << 'EOF' > config.json
-          $CHECKIN_CONFIG
-          EOF
-          echo "=== 配置文件检查 ==="
-          cat config.json
-          echo -e "\n=== 开始执行每日签到 ==="
+          python3 -c "import os; open('config.json', 'w', encoding='utf-8').write(os.environ.get('CHECKIN_CONFIG', ''))"
+          echo "=== 配置文件已成功写入 ==="
           dailycheckin
