@@ -2,8 +2,9 @@ name: Daily Checkin
 
 on:
   schedule:
-    # 【临时验证】每10分钟触发一次，确认 schedule 机制生效后改回 '17 1 * * *'
-    - cron: '*/10 * * * *'
+    # 每天北京时间 09:17 自动运行（timezone 字段为 GitHub Actions 2026-03 新增）
+    - cron: '17 9 * * *'
+      timezone: "Asia/Shanghai"
   # 支持在 GitHub 页面手动点击触发
   workflow_dispatch:
 
