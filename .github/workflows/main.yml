@@ -5,9 +5,6 @@ on:
     # 每天北京时间 09:17 自动运行（timezone 字段为 GitHub Actions 2026-03 新增）
     - cron: '17 9 * * *'
       timezone: "Asia/Shanghai"
-    # 【临时验证】每5分钟触发一次，确认 schedule 恢复后删除本段
-    - cron: '*/5 * * * *'
-      timezone: "Asia/Shanghai"
   # 支持在 GitHub 页面手动点击触发
   workflow_dispatch:
 
